@@ -14,4 +14,4 @@ info('Hello world!');
 
 Schedule::command('app:test-job')->everyMinute();
 
-Schedule::command('articles:scrape-all')->shouldRepeatNow();
+Schedule::command('articles:scrape-all')->everyFourHours();
