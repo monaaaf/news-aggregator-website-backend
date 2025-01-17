@@ -128,10 +128,12 @@ class NYTimesScraperService extends BaseScraperService {
             'author_id'      => count($authors) > 0 ? $authors[0]?->id : null,
         ];
 
+        $article['slug'] = Str::slug($article['title']);
+
         Article::upsert(
             [$article],
-            ['url'], // Unique constraint
-            ['title', 'trail_text', 'content', 'featured_image', 'published_at', 'source_id', 'category_id', 'author_id', 'updated_at']
+            ['slug'], // Unique constraint
+            ['title', 'stand_first', 'trail_text', 'main', 'content', 'url', 'featured_image', 'published_at', 'source_id', 'category_id', 'author_id', 'updated_at']
         );
 
         Log::info('Article stored.', ['title' => $article['title'], 'url' => $article['url']]);

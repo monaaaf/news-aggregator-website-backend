@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class NewsApiScraperService extends BaseScraperService {
     public function __construct() {
@@ -54,7 +55,6 @@ class NewsApiScraperService extends BaseScraperService {
                 DB::beginTransaction();
 
                 try {
-
                     foreach ($response['articles'] as $articleData) {
                         // Store or retrieve the source
                         $source = Source::firstOrCreate(
@@ -82,11 +82,12 @@ class NewsApiScraperService extends BaseScraperService {
                             'author_id'      => count($authors) > 0 ? $authors[0]?->id : null,
                         ];
 
-                        // Upsert the article, ensuring no duplicates based on URL
+                        $article['slug'] = Str::slug($article['title']);
+
                         Article::upsert(
                             [$article],
-                            ['url'],  // Ensure that the URL is unique and handle conflicts by updating
-                            ['title', 'content', 'url', 'featured_image', 'published_at', 'source_id', 'category_id', 'author_id', 'updated_at']
+                            ['slug'], // Unique constraint
+                            ['title', 'stand_first', 'trail_text', 'main', 'content', 'url', 'featured_image', 'published_at', 'source_id', 'category_id', 'author_id', 'updated_at']
                         );
 
                         Log::info('Stored article', ['title' => $articleData['title'], 'url' => $articleData['url']]);

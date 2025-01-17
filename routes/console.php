@@ -10,6 +10,8 @@ Artisan::command(
 }
 )->purpose('Display an inspiring quote')->hourly();
 
-Schedule::command('articles:scrape-guardian-articles')->everyFourHours();
-Schedule::command('articles:scrape-news-api-articles')->everyFourHours();
-Schedule::command('articles:scrape-n-y-times-articles')->everyFourHours();
+info('Hello world!');
+
+Schedule::command('app:test-job')->everyMinute();
+
+Schedule::command('articles:scrape-all')->shouldRepeatNow();

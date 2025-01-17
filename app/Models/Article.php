@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Sluggable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -21,6 +22,7 @@ class Article extends Model {
             'source_id',
             'category_id',
             'author_id',
+            'slug',
         ];
 
     public function source(): BelongsTo {

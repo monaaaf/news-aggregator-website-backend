@@ -5,8 +5,6 @@ namespace App\Services\Scrapers;
 use App\Enums\ApiProviderEnum;
 use App\Models\ApiProvider;
 use App\Models\Article;
-use App\Models\Author;
-use App\Models\Category;
 use App\Models\Source;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class GuardianScraperService extends BaseScraperService {
+
     public function __construct() {
         parent::__construct(
             'https://content.guardianapis.com',
@@ -102,10 +101,12 @@ class GuardianScraperService extends BaseScraperService {
             'author_id'      => count($authors) > 0 ? $authors[0]?->id : null,
         ];
 
+        $article['slug'] = Str::slug($article['title']);
+
         Article::upsert(
             [$article],
-            ['url'], // Unique constraint
-            ['title', 'stand_first', 'trail_text', 'main', 'content', 'featured_image', 'published_at', 'source_id', 'category_id', 'author_id', 'updated_at']
+            ['slug'], // Unique constraint
+            ['title', 'stand_first', 'trail_text', 'main', 'content', 'url', 'featured_image', 'published_at', 'source_id', 'category_id', 'author_id', 'updated_at']
         );
 
         Log::info('Stored article', ['title' => $article['title'], 'url' => $article['url']]);

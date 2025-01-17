@@ -36,7 +36,7 @@ abstract class BaseScraperService {
 
     abstract public function scrape(string $fromDate, string $toDate, string $category = null): void;
 
-    protected function getOrCreateCategory(string $name): Category|null {
+    protected function getOrCreateCategory(?string $name): Category|null {
         if (!$name) {
             return null;
         }

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
@@ -10,7 +11,7 @@ return new class extends Migration {
             'api_providers', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique(); // e.g., NewsAPI
-            $table->string('url');            // e.g., https://newsapi.org
+            $table->longText('url');            // e.g., https://newsapi.org
             $table->timestamps();
         }
         );
@@ -19,7 +20,7 @@ return new class extends Migration {
             'sources', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique(); // e.g., BBC News
-            $table->string('url');            // e.g., https://www.bbc.com/news
+            $table->longText('url');            // e.g., https://www.bbc.com/news
             $table->foreignId('api_provider_id')->constrained('api_providers')->cascadeOnDelete();
             $table->timestamps();
         }
@@ -51,12 +52,13 @@ return new class extends Migration {
             $table->text('stand_first')->nullable();
             $table->longText('main')->nullable(); // for example, the guardian have this
             $table->longText('content');
-            $table->text('url')->unique();  // URL of the article
+            $table->longText('url');
             $table->longText('featured_image')->nullable();
             $table->timestamp('published_at');
             $table->foreignId('source_id')->nullable()->constrained('sources')->cascadeOnDelete();
             $table->foreignId('category_id')->nullable()->constrained('categories')->cascadeOnDelete();
             $table->foreignId('author_id')->nullable()->constrained('authors')->cascadeOnDelete();
+            $table->string('slug')->unique();
             $table->timestamps();
         }
         );
